@@ -1,5 +1,44 @@
 require 'rails_helper'
 
+RSpec.describe CommentsController, type: :controller do
+# Comments Create ###########################################################
+  describe "Comments#create action" do
+    it "should allow users to create comments on grams" do
+      gram = FactoryBot.create(:gram)
+
+      user = FactoryBot.create(:user)
+      sign_in user
+
+      post :create, params: { gram_id: gram.id, comment: { message: "That Picture's Worth a Thousand Words" } }
+      
+      expect(response).to redirect_to root_path
+      expect(gram.comments.length).to eq 1
+      expect(gram.comments.first.message).to eq "That Picture's Worth a Thousand Words"
+    end
+
+    it "should requre a user to be logged in to comment on a gram" do
+      gram = FactoryBot.create(:gram)
+      post :create, params: { gram_id: gram.id, comment: { message: "That Picture's Worth a Thousand Words" } }
+      expect(response).to redirect_to new_user_session_path
+
+    end
+
+    it "should return http status code of not found if the gram isn't found" do
+      user = FactoryBot.create(:user)
+      sign_in user
+      post :create, params: { gram_id: 'YOLOSWAG', comment: { message: "That Picture's Worth a Thousand Words" } }
+      expect(response).to have_http_status :not_found
+
+
+    end
+  end
+  ###########################################################################
+
+
+end
+
+
+
 RSpec.describe GramsController, type: :controller do
 # Destroy #################################################################
   describe "grams#destroy action" do
@@ -110,7 +149,7 @@ RSpec.describe GramsController, type: :controller do
   end
 ###########################################################################
 
-# Action ##################################################################
+# Show ####################################################################
   describe "grams#show action" do
     it "should successfully show the page if the gram is found" do
       gram = FactoryBot.create(:gram)
@@ -152,7 +191,7 @@ RSpec.describe GramsController, type: :controller do
   end
 ###########################################################################
 
-# Create ##################################################################
+# Grams Create ############################################################
   describe "grams#create action" do
 
     it "should requre users to be logged in" do
