@@ -3,6 +3,8 @@
 ## Application:<br>
 This application is located here: https://thousandwords-patricklyden.herokuapp.com\
 
+![Home_Page](../Saved-Images/ThousandWords_Home_Page.png)
+
 ## Purpose:<br>
 This project is essentially a clone of Instagram.  This application was created using Test Driven Development
 
